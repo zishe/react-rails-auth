@@ -15,14 +15,14 @@
 # gem 'pg'
 #
 default: &default
-  host: db
+  host: <%= ENV.fetch('PROD_DATABASE_HOST') { 'db' } %>
   adapter: postgresql
-  username: postgres
-  password: <%= ENV['POSTGRES_PASSWORD'] %>
+  username: <%= ENV.fetch('PROD_DATABASE_USER') { 'postgres' } %>
+  password: <%= ENV.fetch('PROD_DATABASE_PASSWORD') { ENV.fetch('POSTGRES_PASSWORD') } %>
   encoding: unicode
   # For details on connection pooling, see Rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  pool: <%= ENV.fetch('RAILS_MAX_THREADS') { 5 } %>
 
 development:
   <<: *default
@@ -34,4 +34,8 @@ test:
 
 production:
   <<: *default
-  database: api_production
+  database: <%= ENV.fetch('PROD_DATABASE_NAME') { 'exchangeService' } %>
+  host: <%= ENV.fetch('PROD_DATABASE_HOST') { 'db' } %>
+  adapter: postgresql
+  username: <%= ENV.fetch('PROD_DATABASE_USER') { 'postgres' } %>
+  password: <%= ENV.fetch('PROD_DATABASE_PASSWORD') { ENV.fetch('POSTGRES_PASSWORD') } %>
